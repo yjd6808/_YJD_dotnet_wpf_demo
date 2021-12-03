@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<!-- 
+		Self-Contained 빌드를 위해 프로퍼티 추가
+		이때 넣어줄 값은 https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
+		RID 규격을 따를 것
+		
+		[궁금한 점]
+		1. RuntimeIdentifier 프로퍼티값 주면 Self-Contained 프로젝트로 해준다는데
+		   SelfContained 프로퍼티도 같이 true로 줘야 되는 건가?
+		   
+		TargetPlatform : 모든 프로젝트 플랫폼 (x86 또는 x64) : Any CPU로 하고싶으면 코드 수정 필요
+		AppConfiguration : 닷넷 라이브러리
+		DesktopAppConfiguration : 닷넷 WPF & Winform 프레임워크
+		CLRConfiguration : 닷넷 런타임
+		
+		Reference : 어셈블리 참조
+		ReferenceCopyLocalPaths : 파일 복사 느낌?
+	-->
+	<PropertyGroup>
+		<TargetSdk>net6.0</TargetSdk>
+		<SelfContained>true</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<RuntimeRoot>..\..\..\runtime</RuntimeRoot>
+		<WpfRoot>..\..\..\wpf</WpfRoot>
+		<TargetPlatform>x64</TargetPlatform>
+		<TargetOS>windows</TargetOS>
+
+		<AppConfiguration>Debug</AppConfiguration>
+		<DesktopAppConfiguration>Debug</DesktopAppConfiguration>
+		<CLRConfiguration>Release</CLRConfiguration>
+	</PropertyGroup>
+
+	<!-- WPF Debug 빌드시-->
+	<PropertyGroup Condition=" '$(DesktopAppConfiguration)'=='Debug' ">
+		<WpfOutputPath>$(WpfRoot)\artifacts\packaging\Debug\$(TargetPlatform)\Microsoft.DotNet.Wpf.GitHub.Debug</WpfOutputPath>
+	</PropertyGroup>
+
+	<!-- WPF Release 빌드시-->
+	<PropertyGroup Condition=" '$(DesktopAppConfiguration)'=='Release' ">
+		<WpfOutputPath>$(WpfRoot)\artifacts\packaging\Release\$(TargetPlatform)\Microsoft.DotNet.Wpf.GitHub</WpfOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<WpfLibPath>$(WpfOutputPath)\lib\$(TargetSdk)</WpfLibPath>
+		<WpfRefPath>$(WpfOutputPath)\ref\$(TargetSdk)</WpfRefPath>
+		<WpfRuntimePath>$(WpfOutputPath)\runtimes\$(RuntimeIdentifier)\native</WpfRuntimePath>
+	</PropertyGroup>
+
+
+	<!-- 닷넷 런타임 & 프레임워크 어셈블리들 -->
+	<ItemGroup>
+		<Reference Include="$(RuntimeRoot)\artifacts\bin\runtime\$(TargetFramework)-$(AppConfiguration)-$(TargetPlatform)\*.dll" Exclude="$(RuntimeRoot)\artifacts\bin\runtime\$(TargetFramework)-$(AppConfiguration)-$(TargetPlatform)\WindowsBase.dll;&#xD;&#xA;							$(RuntimeRoot)\artifacts\bin\runtime\$(TargetFramework)-$(AppConfiguration)-$(TargetPlatform)\System.IO.Compression.Native.dll;&#xD;&#xA;							$(RuntimeRoot)\artifacts\bin\runtime\$(TargetFramework)-$(AppConfiguration)-$(TargetPlatform)\msquic.dll" />
+		<Reference Include="$(RuntimeRoot)\artifacts\bin\coreclr\$(TargetOS).$(TargetPlatform).$(CLRConfiguration)\System.*.dll"></Reference>
+	</ItemGroup>
+
+	<!-- 닷넷 WPF & 윈폼 프레임워크 어셈블리들 -->
+	<ItemGroup>
+		<Reference Include="$(WpfLibPath)\*.dll"></Reference>
+
+		<!--파일들도 전부 복사하도록 함-->
+		<ReferenceCopyLocalPaths Include="$(WpfLibPath)\*.dll" />
+		<ReferenceCopyLocalPaths Include="$(WpfRuntimePath)\*.dll" />
+		<ReferenceCopyLocalPaths Include="$(WpfRuntimePath)\*.pdb" />
+		<ReferenceCopyLocalPaths Include="$(WpfRefPath)\*.xml" />
+	</ItemGroup>
+
+</Project>

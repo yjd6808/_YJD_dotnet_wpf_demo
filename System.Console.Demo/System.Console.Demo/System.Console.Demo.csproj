@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Platforms>x64</Platforms>
+	</PropertyGroup>
+
+	<!-- 
+		Self-Contained 빌드를 위해 프로퍼티 추가
+		이때 넣어줄 값은 https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
+		RID 규격을 따를 것
+	-->
+	<PropertyGroup>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<RuntimeRoot>../../../runtime</RuntimeRoot>
+		<TargetOS>windows</TargetOS>
+		
+		<FrameworkConfiguration>Debug</FrameworkConfiguration>
+		<CLRConfiguration>Release</CLRConfiguration>
+	</PropertyGroup>
+
+	<ItemGroup>
+
+		<Reference Include="$(RuntimeRoot)\artifacts\bin\runtime\$(TargetFramework)-$(Configuration)-$(Platforms)\*.dll" />
+		<Reference Include="$(RuntimeRoot)\artifacts\bin\coreclr\$(TargetOS).$(Platforms).$(CLRConfiguration)\System.*.dll"></Reference>
+	</ItemGroup>
+</Project>

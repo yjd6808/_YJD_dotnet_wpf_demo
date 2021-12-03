@@ -1,0 +1,15 @@
+﻿<Window x:Class="PresentationCore.Demo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PresentationCore.Demo"
+        mc:Ignorable="d"
+        Title="PresentationCore.Demo" Height="200" Width="600">
+    <StackPanel>
+        <TextBlock x:Name="_textBlockRuntimeVersion" FontSize="16">런타임 버전 : </TextBlock>
+        <Separator></Separator>
+        <TextBlock x:Name="_textBlockAssemblyPath" FontSize="16" TextWrapping="Wrap">런타임 경로 : </TextBlock>
+        <Separator></Separator>
+    </StackPanel>
+</Window>
